@@ -4,8 +4,13 @@ create Python output value and dtype test cases for user programs.
 '''
 
 from bcolors import bcolors
-bc = bcolors()
+bc = bcolors() # global colors object
 
+'''
+This is the Test Case class. This holdes the test case's id, the function call, the 
+input value it is bonded to, the expected value that the function outputs based on
+the input value, and the types of both data values.
+'''
 class TestCase(object):
     def __init__(self, test_id, func, expected_value):
         self.id = test_id
@@ -35,9 +40,16 @@ class TestCase(object):
         else:
             bc.cprint(bc.FAIL, "Error: Did not pass Test Case {} due to varying values: {} vs {}"
                     .format(self.id, self.output_value, self.expected_value))
-
+            bc.cprint(bc.FAIL, "Check function or expected value")
         return ret_val
 
+    '''
+    Function to display test information. This would be the function, input value, expected value, 
+    and value types and addresses.
+    '''
+    def display_test_info(self):
+        pass
+       
 class TestCases(object):
     def __init__(self):
         self.test_counter = 0
@@ -56,7 +68,10 @@ class TestCases(object):
         new_tc = TestCase(self.test_counter, func, expected_value)
         new_tc.bond_value(bc, input_value)
         self.test_array.append(new_tc)
-
+    
+    '''
+    Evaluate the tests stored in the array
+    '''
     def evaluate_tests(self):
         bc.cprint(bc.OKBLUE, "Now evaluating all test cases")
         for t in self.test_array:
@@ -65,7 +80,14 @@ class TestCases(object):
             if eval_val == True:
                 self.total_score += 1
 
-        print("Total Score: %.1f/%.1f" % (self.total_score, len(self.test_array)))
+        score = self.total_score/len(self.test_array)
+        if score == 1.0:
+            bc.cprint(bc.OKGREEN, "Total Score: %.1f/%.1f" % (self.total_score, len(self.test_array)))
+        elif score == 0.0:
+            bc.cprint(bc.FAIL, "Total Score: %.1f/%.1f" % (self.total_score, len(self.test_array)))
+        else:
+            bc.cprint(bc.WARNING, "Total Score: %.1f/%.1f" % (self.total_score, len(self.test_array)))
+
 
 if __name__ == '__main__':
     TestCases()
